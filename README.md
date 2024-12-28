@@ -1,5 +1,5 @@
 Este projeto foi inspirado no conceito dos jogos **Wordle** e **Termo**, onde o objetivo é adivinhar uma palavra em um número limitado de tentativas, recebendo feedback sobre a precisão de cada letra inserida.
-Criei esse projeto apenas para fins de estudo acadêmico.
+Criado apenas para fins de estudo acadêmico.
 
 # Regras do Jogo
 - O jogador deve adivinhar uma palavra de 5 letras.
