@@ -9,9 +9,9 @@
     <style>
         /* Estilo geral para a página em modo escuro */
         body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
             height: 100vh;
             margin: 0;
         }
@@ -28,14 +28,23 @@
         /* Container do Jogo */
         .container {
             max-width: 600px;
-            padding: 20px;
-            background-color: #1f1f1f;
-            border-radius: 8px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            background-color: #1e242b;
+            border-radius: 12px;
+            box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Animação de Fade In */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         .jogo-header {
             text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
             margin-bottom: 20px;
         }
 
@@ -52,20 +61,19 @@
         .btn-custom {
             background-color: #6200ea;
             color: white;
+            border-radius: 30px;
+            transition: all 0.3s ease;
         }
 
         .btn-custom:hover {
             background-color: #3700b3;
+            transform: scale(1.05);
         }
 
         .input-custom {
             text-transform: uppercase;
-        }
-
-        /* Adicionando borda e efeitos no botão */
-        .btn-custom:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.5);
+            border-radius: 30px;
+            margin-bottom: 15px;
         }
 
         /* Tentativas restantes */
@@ -81,6 +89,7 @@
             padding: 10px;
             background-color: #333;
             border-radius: 8px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         .tentativas-lista ul {
@@ -91,6 +100,33 @@
         .tentativas-lista li {
             font-size: 1.2em;
             margin-bottom: 5px;
+            text-align: left;
+            word-wrap: break-word;
+        }
+
+        /* Alinhamento do texto */
+        h4 {
+            text-align: center;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* Alinhamento do formulário */
+        #jogo-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #tentativa {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 15px;
+        }
+
+        .btn-custom {
+            width: 100%;
+            max-width: 300px;
         }
     </style>
 </head>
@@ -106,7 +142,7 @@
             </form>
             <div id="feedback" class="feedback text-center"></div>
             <div id="tentativasRestantes" class="tentativas-restantes">Tentativas restantes: 5</div>
-            
+
             <!-- Exibição das tentativas anteriores -->
             <div class="tentativas-lista">
                 <h4>Tentativas Anteriores:</h4>
@@ -146,7 +182,7 @@
                 const data = await response.json();
                 feedbackDiv.innerHTML = data.feedback.map(
                     f => `<span class="${f.cor}">${f.letra}</span>`
-                ).join("");
+                ).join(" ");
 
                 // Armazenar tentativa anterior
                 tentativasAnteriores.push({
