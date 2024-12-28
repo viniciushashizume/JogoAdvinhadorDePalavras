@@ -7,9 +7,10 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ6H16RQKLuok5xS5lP7qlt0zYwT7jauR79vFzJEdk5K0QdRp7hZ1d9FZp06" crossorigin="anonymous">
     <style>
-        /* Estilo geral para a página */
+        /* Estilo geral para a página em modo escuro */
         body {
-            background-color: #f4f6f9;
+            background-color: #121212;
+            color: #ffffff;
             font-family: 'Arial', sans-serif;
             height: 100vh;
             margin: 0;
@@ -28,9 +29,9 @@
         .container {
             max-width: 600px;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #1f1f1f;
             border-radius: 8px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
         }
 
         .jogo-header {
@@ -43,21 +44,53 @@
             font-size: 1.2em;
         }
 
-        .green { color: green; font-weight: bold; }
-        .yellow { color: goldenrod; font-weight: bold; }
-        .gray { color: gray; }
+        /* Cores do Feedback */
+        .green { color: #4caf50; font-weight: bold; }
+        .yellow { color: #ffeb3b; font-weight: bold; }
+        .gray { color: #9e9e9e; }
 
         .btn-custom {
-            background-color: #007bff;
+            background-color: #6200ea;
             color: white;
         }
 
         .btn-custom:hover {
-            background-color: #0056b3;
+            background-color: #3700b3;
         }
 
         .input-custom {
             text-transform: uppercase;
+        }
+
+        /* Adicionando borda e efeitos no botão */
+        .btn-custom:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.5);
+        }
+
+        /* Tentativas restantes */
+        .tentativas-restantes {
+            font-size: 1.2em;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Estilo para exibição das tentativas anteriores */
+        .tentativas-lista {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 8px;
+        }
+
+        .tentativas-lista ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .tentativas-lista li {
+            font-size: 1.2em;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -72,6 +105,15 @@
                 <button type="submit" class="btn btn-custom mt-3">Enviar</button>
             </form>
             <div id="feedback" class="feedback text-center"></div>
+            <div id="tentativasRestantes" class="tentativas-restantes">Tentativas restantes: 5</div>
+            
+            <!-- Exibição das tentativas anteriores -->
+            <div class="tentativas-lista">
+                <h4>Tentativas Anteriores:</h4>
+                <ul id="tentativasAnteriores">
+                    <!-- As tentativas serão exibidas aqui -->
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -82,6 +124,10 @@
     <script>
         const form = document.getElementById('jogo-form');
         const feedbackDiv = document.getElementById('feedback');
+        const tentativasRestantesDiv = document.getElementById('tentativasRestantes');
+        const tentativasAnterioresDiv = document.getElementById('tentativasAnteriores');
+        let tentativasRestantes = 5;
+        let tentativasAnteriores = [];
 
         form.onsubmit = async (e) => {
             e.preventDefault();
@@ -102,8 +148,33 @@
                     f => `<span class="${f.cor}">${f.letra}</span>`
                 ).join("");
 
+                // Armazenar tentativa anterior
+                tentativasAnteriores.push({
+                    tentativa: tentativa,
+                    feedback: data.feedback
+                });
+
+                // Atualizar a lista de tentativas anteriores
+                tentativasAnterioresDiv.innerHTML = "";
+                tentativasAnteriores.forEach(t => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = t.feedback.map(
+                        f => `<span class="${f.cor}">${f.letra}</span>`
+                    ).join(" ");
+                    tentativasAnterioresDiv.appendChild(listItem);
+                });
+
+                // Atualiza o número de tentativas restantes
+                tentativasRestantes--;
+                tentativasRestantesDiv.innerHTML = `Tentativas restantes: ${tentativasRestantes}`;
+
+                // Limpa o campo de entrada
+                document.getElementById('tentativa').value = '';
+
                 if (data.acertou) {
                     alert("Parabéns, você acertou!");
+                } else if (tentativasRestantes === 0) {
+                    alert("Você não conseguiu adivinhar a palavra. O jogo acabou!");
                 }
             } else {
                 const error = await response.json();
